@@ -23,8 +23,7 @@ void drawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
     {
         for (int x = xi; x <= xf; x++)
         {
-            int y = (int)(m * x + yi);
-            std::cout << y << " - " << yi << " - " << m << std::endl;
+            int y = (int)(m * (x-xi) + yi);
             image.set(x, y, color);
         }
     }
@@ -40,10 +39,13 @@ void drawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
 int main(int argc, char **argv)
 {
     TGAImage image(100, 100, TGAImage::RGB);
+    
+    // Draw 3 test lines
     drawLine(0, 0, 30, 40, image, red);
     drawLine(30,40, 50, 50, image, white);
     drawLine(50, 50, 99, 99, image, red);
-    image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
+
+    image.flip_vertically(); // set the origin to top-bottom
     image.write_tga_file("output.tga");
     return 0;
 }
