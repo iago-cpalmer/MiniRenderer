@@ -92,5 +92,4 @@ public:
 	unsigned char *buffer();
 	void clear();
 };
-
 #endif //__IMAGE_H__
