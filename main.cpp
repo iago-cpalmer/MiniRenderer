@@ -23,23 +23,21 @@ void drawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
     {
         for (int x = xi; x <= xf; x++)
         {
-            int y = (int)(m * (x-xi) + yi);
-            image.set(x, y, color);
+            image.set(x, (int)(m * (x-xi) + yi), color);
         }
     }
     else
     {
         for (int y = yi; y <= yf; y++)
         {
-            int x = (int)((y - yi) / m) + xi;
-            image.set(x, y, color);
+            image.set((int)((y - yi) / m) + xi, y, color);
         }
     }
 }
 int main(int argc, char **argv)
 {
     TGAImage image(100, 100, TGAImage::RGB);
-    
+
     // Draw 3 test lines
     drawLine(0, 0, 30, 40, image, red);
     drawLine(30,40, 50, 50, image, white);
