@@ -4,7 +4,7 @@ This project does not rely on external libraries and it will not be working dire
 'output.tga' because I am not interested in doing it real time for now as it is, as I mentioned earlier, just to learn the basics of rendering at a low-level, painting pixel per pixel :)
 
 
-For now, 3D models can be loaded (.obj) and draw its wireframe:
+For now, the MiniRenderer project allows for the loading of 3D models in the .obj format and drawing their wireframes:
 <br />
 ![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/98d09de6-6acb-40dc-922c-ac1326c2559d)
 
