@@ -47,6 +47,7 @@
         "string": "cpp",
         "xmemory0": "cpp",
         "list": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "algorithm": "cpp"
     }
 }
