@@ -5,5 +5,6 @@ This project does not rely on external libraries and it will not be working dire
 
 
 For now, 3D models can be loaded (.obj) and draw its wireframe:
+<br />
 ![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/98d09de6-6acb-40dc-922c-ac1326c2559d)
 
