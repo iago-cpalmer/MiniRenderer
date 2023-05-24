@@ -13,6 +13,7 @@ For now, the MiniRenderer project allows for the loading of 3D models in the .ob
 <br />
 Next step: filling triangles.
 <br />
+
 ![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/41190203-e97d-48ba-8e66-d7ad1f1787c9)
 
 
