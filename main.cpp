@@ -1,7 +1,7 @@
 #include "main.h"
 
 void DrawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
-{
+{   
     if (xf < xi && std::abs(xf - xi) > std::abs(yf - yi))
     {
         int aux = xi;
@@ -20,6 +20,7 @@ void DrawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
         xi = xf;
         xf = aux;
     }
+
     float m = static_cast<float>(yf - yi) / (xf - xi);
     if ((xf - xi) > (yf - yi))
     {
@@ -36,11 +37,12 @@ void DrawLine(int xi, int yi, int xf, int yf, TGAImage &image, TGAColor color)
         for (int y = yi; y <= yf; y++)
         {
             x = (int)((y - yi) / m) + xi;
-            image.set(x, y, color);
+            image.set(x, y, color);             
         }
     }
 }
-void DrawTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color) {
+void DrawTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color)
+{
     DrawLine(v0.x, v0.y, v1.x, v1.y, image, color);
     DrawLine(v1.x, v1.y, v2.x, v2.y, image, color);
     DrawLine(v2.x, v2.y, v0.x, v0.y, image, color);
@@ -60,57 +62,112 @@ void DrawWireframe(Model *model, TGAImage &image, TGAColor color)
         Vector3Int vi3 = {(int)((v3.x + 1.) * 0.5 * image.get_width()), (int)((1. + v3.y) * 0.5 * image.get_height()), 0};
 
         DrawTriangle(vi1, vi2, vi3, image, color);
-        
     }
 }
 
-void FillTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color) {
-    int xf = v2.x;
-    int xi = v1.x;
-    int yf = v2.y;
-    int yi = v1.y;
-    if (xf < xi && std::abs(xf - xi) > std::abs(yf - yi))
+void FillFlatBottomTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color)
+{
+    float m1 = static_cast<float>(v2.y - v0.y) / (v2.x == v0.x ? 1 : (v2.x - v0.x));
+    float m2 = static_cast<float>(v2.y - v1.y) / (v2.x == v1.x ? 1 : (v2.x - v1.x));
+    for (int y = v0.y; y <= v2.y; y++)
     {
-        int aux = xi;
-        xi = xf;
-        xf = aux;
-        aux = yi;
-        yi = yf;
-        yf = aux;
+        int x1 = (int)(m1 == 0 ? v0.x : (y - v0.y) / m1) + v0.x;
+        int x2 = (int)(m2 == 0 ? v1.x : (y - v1.y) / m2) + v1.x;
+        DrawLine(x1, y, x2, y, image, color);
     }
-    else if (yf < yi && std::abs(xf - xi) < std::abs(yf - yi))
+}
+
+void FillFlatTopTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color)
+{
+    float m1 = static_cast<float>(v1.y - v0.y) / (v1.x == v0.x ? 1 : (v1.x - v0.x));
+    float m2 = static_cast<float>(v2.y - v1.y) / (v2.x == v1.x ? 1 : (v2.x - v1.x));
+    for (int y = v1.y; y <= v0.y; y++)
     {
-        int aux = yi;
-        yi = yf;
-        yf = aux;
-        aux = xi;
-        xi = xf;
-        xf = aux;
+        int x1 = (int)(m1 == 0 ? v0.x : (y - v0.y) / m1) + v0.x;
+        int x2 = (int)(m2 == 0 ? v1.x : (y - v1.y) / m2) + v1.x;
+        DrawLine(x1, y, x2, y, image, color);
     }
-    float m = static_cast<float>(yf - yi) / (xf - xi);
-    if ((xf - xi) > (yf - yi))
+}
+
+void FillTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, TGAColor color)
+{
+    if((v0.x == v1.x && v0.x==v2.x) || (v0.y == v1.y && v0.y==v2.y)) {
+        return;
+    }
+    Vector3Int vmax, vmin, vother;
+    if (v0.y >= v1.y && v0.y >= v2.y)
     {
-        int y = 0;
-        for (int x = xi; x <= xf; x++)
+        // v0 max
+        if (v1.y > v2.y)
         {
-            y = (int)(m * (x - xi) + yi);
-            DrawLine(v0.x, v0.y, x, y, image, color);
+            vmin = v2;
+            vother = v1;
         }
+        else
+        {
+            vmin = v1;
+            vother = v2;
+        }
+        vmax = v0;
+    }
+    else if (v0.y < v1.y && v2.y > v1.y)
+    {
+        // v2 max
+        // v0 min
+        vmax = v2;
+        vmin = v0;
+        vother = v1;
+    }
+    else if (v0.y < v2.y && v1.y >= v2.y)
+    {
+        // v1 max
+        // v0 min
+        vmax = v1;
+        vmin = v0;
+        vother = v2;
+    }
+    else if (v2.y > v1.y)
+    {
+        // v2 max
+        // v1 min
+        vmax = v2;
+        vmin = v1;
+        vother = v0;
     }
     else
     {
-        int x = 0;
-        for (int y = yi; y <= yf; y++)
-        {
-            x = (int)((y - yi) / m) + xi;
-            DrawLine(v0.x, v0.y, x, y, image, color);
-        }
+        // v1 max
+        // v2 min
+        vmax = v1;
+        vmin = v2;
+        vother = v0;
+    }
+    
+
+    if (vother.y == vmin.y)
+    {
+        // Flat bottom triangle
+        FillFlatBottomTriangle(vother, vmin, vmax, image, color);
+    }
+    else if (vother.y == vmax.y)
+    {
+        // flat top triangle
+        FillFlatTopTriangle(vother, vmin, vmax, image, color);
+    }
+    else
+    {
+        // Do flat bottom triangle
+        FillFlatBottomTriangle(vother, vmin, vmax, image, color);
+        // Do flat top triangle
+        FillFlatTopTriangle(vother, vmin, vmax, image, color);
     }
 }
 
-void DrawModel(Model *model, TGAImage &image, TGAColor color) {
+void DrawModel(Model *model, TGAImage &image, TGAColor color)
+{
     for (unsigned int i = 0; i < model->n_faces; i++)
     {
+        // std::cout << i << "/" << model->n_faces << std::endl;
         Vector3Int vertices = model->faces[i][0];
 
         Vector3f v1 = model->vertexs[vertices.x - 1];
@@ -121,19 +178,18 @@ void DrawModel(Model *model, TGAImage &image, TGAColor color) {
         Vector3Int vi2 = {(int)((v2.x + 1.) * 0.5 * image.get_width()), (int)((1. + v2.y) * 0.5 * image.get_height()), 0};
         Vector3Int vi3 = {(int)((v3.x + 1.) * 0.5 * image.get_width()), (int)((1. + v3.y) * 0.5 * image.get_height()), 0};
 
-       FillTriangle(vi1, vi2, vi3, image, color);
+        FillTriangle(vi1, vi2, vi3, image, color);
+        
     }
 }
 
 int main(int argc, char **argv)
 {
-    TGAImage image(200,200, TGAImage::RGB);
+    TGAImage image(4000,4000, TGAImage::RGB);
 
     Model *model = ParseObj("obj/african_head.obj");
-    //DrawWireframe(model, image, white);
-    //DrawLine(0,0,20,20,image, white);
-    //FillTriangle(Vector3Int(0,0,0), Vector3Int(20,0,0), Vector3Int(10,20,0), image, white);
-    //DrawModel(model, image, white);
+    DrawModel(model, image, white);
+    DrawWireframe(model, image, red);
     image.flip_vertically(); // set the origin to top-bottom
     image.write_tga_file("output.tga");
     return 0;
