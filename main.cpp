@@ -165,10 +165,12 @@ void FillTriangle(Vector3Int v0, Vector3Int v1, Vector3Int v2, TGAImage &image, 
 
 void DrawModel(Model *model, TGAImage &image, TGAColor color)
 {
+    // Temporary light source
+    Vector3f lightDirection = {0,0,-1};
     for (unsigned int i = 0; i < model->n_faces; i++)
     {
-        // std::cout << i << "/" << model->n_faces << std::endl;
         Vector3Int vertices = model->faces[i][0];
+        Vector3Int normals = model->faces[i][2];
 
         Vector3f v1 = model->vertexs[vertices.x - 1];
         Vector3f v2 = model->vertexs[vertices.y - 1];
@@ -178,8 +180,16 @@ void DrawModel(Model *model, TGAImage &image, TGAColor color)
         Vector3Int vi2 = {(int)((v2.x + 1.) * 0.5 * image.get_width()), (int)((1. + v2.y) * 0.5 * image.get_height()), 0};
         Vector3Int vi3 = {(int)((v3.x + 1.) * 0.5 * image.get_width()), (int)((1. + v3.y) * 0.5 * image.get_height()), 0};
 
-        FillTriangle(vi1, vi2, vi3, image, color);
-        
+        // Calculate the normal of the face, ignoring for now the normals of each vertex. 
+        // This is temporary to test flat shading.
+        Vector3f vc = {v3.x - v1.x, v3.y-v1.y, v3.z-v1.z};
+        Vector3f n = vc.Cross({v2.x - v1.x, v2.y-v1.y, v2.z-v1.z});
+        n.Normalize();
+        float lightIntensity = n.DotProduct(lightDirection);
+        // Checking if lightIntensity is higher than 0 to do a back face culling
+        if(lightIntensity>0) {
+            FillTriangle(vi1, vi2, vi3, image, TGAColor((int) (color.r*lightIntensity), (int) (color.g*lightIntensity), (int) (color.b*lightIntensity), color.a));
+        }
     }
 }
 
@@ -187,9 +197,9 @@ int main(int argc, char **argv)
 {
     TGAImage image(4000,4000, TGAImage::RGB);
 
-    Model *model = ParseObj("obj/african_head.obj");
+    Model *model = ParseObj("obj/sphere.obj");
     DrawModel(model, image, white);
-    DrawWireframe(model, image, red);
+    //DrawWireframe(model, image, white);
     image.flip_vertically(); // set the origin to top-bottom
     image.write_tga_file("output.tga");
     return 0;

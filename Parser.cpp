@@ -128,7 +128,7 @@ Model* ParseObj(std::string filePath)
 			faces.push_back(ParseFace(line));
 		}
 	}
-	//NormalizeVertices(vertexs);
+	NormalizeVertices(vertexs);
 
 	Vector3f* vertexArr = new Vector3f[vertexs.size()];
 	std::copy(vertexs.begin(), vertexs.end(), vertexArr);
