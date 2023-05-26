@@ -3,6 +3,7 @@
 
 #include "Vector3f.h"
 #include "Vector3Int.h"
+#include "Vector2f.h"
 #include <vector>
 #include <fstream>
 #include <string>

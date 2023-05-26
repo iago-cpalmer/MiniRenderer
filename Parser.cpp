@@ -94,7 +94,7 @@ void NormalizeVertices(std::list<Vector3f>& vertices) {
 Model* ParseObj(std::string filePath)
 {
 	std::list<Vector3f> vertexs;
-	std::list<Vector3f> textures;
+	std::list<Vector2f> textures;
 	std::list<Vector3f> normals;
 	std::list<Vector3Int*> faces;
 
@@ -113,7 +113,8 @@ Model* ParseObj(std::string filePath)
 		else if (line.find("vt ") != std::string::npos)
 		{
 			// Texture coords
-			Vector3f v = ParseVector(line);
+			Vector3f v3d = ParseVector(line);
+			Vector2f v = {v3d.x, v3d.y};
 			textures.push_back(v);
 
 		}
@@ -133,7 +134,7 @@ Model* ParseObj(std::string filePath)
 	Vector3f* vertexArr = new Vector3f[vertexs.size()];
 	std::copy(vertexs.begin(), vertexs.end(), vertexArr);
 
-	Vector3f* textureArr = new Vector3f[textures.size()];
+	Vector2f* textureArr = new Vector2f[textures.size()];
 	std::copy(textures.begin(), textures.end(), textureArr);
 
 	Vector3f* normalArr = new Vector3f[normals.size()];

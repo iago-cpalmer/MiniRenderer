@@ -3,10 +3,11 @@
 
 #include "Vector3f.h"
 #include "Vector3Int.h"
+#include "Vector2f.h"
 
 struct Model {
     Vector3f* vertexs;
-    Vector3f* textures;
+    Vector2f* textures;
     Vector3f* normals;
     Vector3Int** faces;
     unsigned int n_vertices;
