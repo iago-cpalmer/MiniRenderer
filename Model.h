@@ -1,5 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
+
 #include "Vector3f.h"
 #include "Vector3Int.h"
 

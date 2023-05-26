@@ -1,4 +1,5 @@
 #include "Vector3Int.h"
+
 Vector3Int::Vector3Int() {
 
 }
