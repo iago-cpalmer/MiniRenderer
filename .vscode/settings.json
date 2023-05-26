@@ -48,6 +48,7 @@
         "xmemory0": "cpp",
         "list": "cpp",
         "sstream": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "cfloat": "cpp"
     }
 }

@@ -1,6 +1,8 @@
 #ifndef VECTOR3F_H
 #define VECTOR3F_H
+
 #include <cmath>
+
 class Vector3f {
 public:
     float x;
@@ -12,6 +14,7 @@ public:
     float Magnitude();
     Vector3f Cross(Vector3f b);
     void Normalize();
+    float Distance(Vector3f b);
 };
 
 #endif

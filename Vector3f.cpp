@@ -25,3 +25,7 @@ void Vector3f::Normalize() {
 Vector3f Vector3f::Cross(Vector3f b) {
 	return {y*b.z-z*b.y,x*b.z-b.x*z, x*b.y-y*b.x};
 }
+
+float Vector3f::Distance(Vector3f b) {
+	return sqrt(pow(x-b.x, 2) + pow(y-b.y, 2) + pow(z-b.z, 2));
+}
