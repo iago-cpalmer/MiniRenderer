@@ -17,17 +17,10 @@ Filling triangles.
 ![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/9a46843f-5134-4f24-88b7-e92f0329b134)
 
 <br />
-Temporary flat shading:
+Temporary flat shading with Z-buffer algorithm:
 <br/>
 
 ![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/817fc112-3f51-45fc-aaf3-864838ab2724)
-
-<br />
-With Z-buffer algorithm (no changes visually from the previous one as there was a simple back-face culling):
-<br />
-
-![image](https://github.com/iago-cpalmer/MiniRenderer/assets/68129919/dbc41c9d-cd33-4a90-a392-cd720f2b8c6f)
-<br />
 
 
 
